@@ -1,0 +1,10 @@
+{
+  "durabilityinfo.tooltip.durability": "Durability: %d / %d",
+  "durabilityinfo.tooltip.percentage": "Durability: %d%%",
+  "durabilityinfo.config": "DurabilityInfo",
+  "durabilityinfo.config.category": "General",
+  "durabilityinfo.config.showDurabilityNumbers": "Show Durability Numbers",
+  "durabilityinfo.config.showPercentage": "Show Percentage",
+  "durabilityinfo.config.showBar": "Show Durability Bar",
+  "durabilityinfo.config.showOnUnbreakable": "Show On Unbreakable"
+}
