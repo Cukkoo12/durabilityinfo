@@ -17,6 +17,21 @@ public class ModConfig {
     public boolean showBar = true;
     public boolean showOnUnbreakable = false;
 
+    public int warningThreshold = 10;
+    public HudAnchor hudAnchor = HudAnchor.BOTTOM_RIGHT;
+    public int hudOffsetX = 4;
+    public int hudOffsetY = 4;
+    public boolean showDamageDealt = false;
+    public HudDisplayMode hudDisplayMode = HudDisplayMode.BAR;
+
+    public enum HudAnchor {
+        TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+    }
+
+    public enum HudDisplayMode {
+        BAR, PERCENTAGE
+    }
+
     public static ModConfig load() {
         try {
             if (Files.exists(CONFIG_PATH))

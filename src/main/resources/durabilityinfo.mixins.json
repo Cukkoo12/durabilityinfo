@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "com.cukkoo.durabilityinfo.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["DurabilityInfoHUDMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

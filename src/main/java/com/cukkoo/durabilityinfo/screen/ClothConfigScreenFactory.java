@@ -20,40 +20,86 @@ public class ClothConfigScreenFactory {
         ConfigCategory category = builder.getOrCreateCategory(
                 Component.translatable("durabilityinfo.config.category"));
 
-        category.addEntry(entryBuilder
-                .startBooleanToggle(
+        addTooltipOptions(category, entryBuilder, config);
+        addHudOptions(category, entryBuilder, config);
+
+        builder.setSavingRunnable(config::save);
+        return builder.build();
+    }
+
+    private static void addTooltipOptions(ConfigCategory category, ConfigEntryBuilder eb, ModConfig config) {
+        category.addEntry(eb.startBooleanToggle(
                         Component.translatable("durabilityinfo.config.showDurabilityNumbers"),
                         config.showDurabilityNumbers)
                 .setDefaultValue(true)
-                .setSaveConsumer(val -> config.showDurabilityNumbers = val)
+                .setSaveConsumer(v -> config.showDurabilityNumbers = v)
                 .build());
 
-        category.addEntry(entryBuilder
-                .startBooleanToggle(
+        category.addEntry(eb.startBooleanToggle(
                         Component.translatable("durabilityinfo.config.showPercentage"),
                         config.showPercentage)
                 .setDefaultValue(true)
-                .setSaveConsumer(val -> config.showPercentage = val)
+                .setSaveConsumer(v -> config.showPercentage = v)
                 .build());
 
-        category.addEntry(entryBuilder
-                .startBooleanToggle(
+        category.addEntry(eb.startBooleanToggle(
                         Component.translatable("durabilityinfo.config.showBar"),
                         config.showBar)
                 .setDefaultValue(true)
-                .setSaveConsumer(val -> config.showBar = val)
+                .setSaveConsumer(v -> config.showBar = v)
                 .build());
 
-        category.addEntry(entryBuilder
-                .startBooleanToggle(
+        category.addEntry(eb.startBooleanToggle(
                         Component.translatable("durabilityinfo.config.showOnUnbreakable"),
                         config.showOnUnbreakable)
                 .setDefaultValue(false)
-                .setSaveConsumer(val -> config.showOnUnbreakable = val)
+                .setSaveConsumer(v -> config.showOnUnbreakable = v)
+                .build());
+    }
+
+    private static void addHudOptions(ConfigCategory category, ConfigEntryBuilder eb, ModConfig config) {
+        category.addEntry(eb.startIntSlider(
+                        Component.translatable("durabilityinfo.config.warningThreshold"),
+                        config.warningThreshold, 0, 100)
+                .setDefaultValue(10)
+                .setSaveConsumer(v -> config.warningThreshold = v)
                 .build());
 
-        builder.setSavingRunnable(config::save);
+        category.addEntry(eb.startEnumSelector(
+                        Component.translatable("durabilityinfo.config.hudAnchor"),
+                        ModConfig.HudAnchor.class,
+                        config.hudAnchor)
+                .setDefaultValue(ModConfig.HudAnchor.BOTTOM_RIGHT)
+                .setSaveConsumer(v -> config.hudAnchor = v)
+                .build());
 
-        return builder.build();
+        category.addEntry(eb.startEnumSelector(
+                        Component.translatable("durabilityinfo.config.hudDisplayMode"),
+                        ModConfig.HudDisplayMode.class,
+                        config.hudDisplayMode)
+                .setDefaultValue(ModConfig.HudDisplayMode.BAR)
+                .setSaveConsumer(v -> config.hudDisplayMode = v)
+                .build());
+
+        category.addEntry(eb.startIntField(
+                        Component.translatable("durabilityinfo.config.hudOffsetX"),
+                        config.hudOffsetX)
+                .setDefaultValue(4)
+                .setSaveConsumer(v -> config.hudOffsetX = v)
+                .build());
+
+        category.addEntry(eb.startIntField(
+                        Component.translatable("durabilityinfo.config.hudOffsetY"),
+                        config.hudOffsetY)
+                .setDefaultValue(4)
+                .setSaveConsumer(v -> config.hudOffsetY = v)
+                .build());
+
+        category.addEntry(eb.startBooleanToggle(
+                        Component.translatable("durabilityinfo.config.showDamageDealt"),
+                        config.showDamageDealt)
+                .setDefaultValue(false)
+                .setSaveConsumer(v -> config.showDamageDealt = v)
+                .build());
     }
 }
