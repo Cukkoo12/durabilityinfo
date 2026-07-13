@@ -1,0 +1,22 @@
+{
+  "durabilityinfo.tooltip.durability": "Durability: %d / %d",
+  "durabilityinfo.tooltip.percentage": "Durability: %d%%",
+  "durabilityinfo.config": "DurabilityInfo",
+  "durabilityinfo.config.category": "General",
+  "durabilityinfo.config.showDurabilityNumbers": "Show Durability Numbers",
+  "durabilityinfo.config.showPercentage": "Show Percentage",
+  "durabilityinfo.config.showBar": "Show Durability Bar",
+  "durabilityinfo.config.showOnUnbreakable": "Show On Unbreakable",
+  "durabilityinfo.config.warningThreshold": "Low Durability Warning Threshold (%)",
+  "durabilityinfo.config.hudAnchor": "HUD Anchor Position",
+  "durabilityinfo.config.hudAnchor.TOP_LEFT": "Top Left",
+  "durabilityinfo.config.hudAnchor.TOP_RIGHT": "Top Right",
+  "durabilityinfo.config.hudAnchor.BOTTOM_LEFT": "Bottom Left",
+  "durabilityinfo.config.hudAnchor.BOTTOM_RIGHT": "Bottom Right",
+  "durabilityinfo.config.hudDisplayMode": "HUD Display Mode",
+  "durabilityinfo.config.hudDisplayMode.BAR": "Bar",
+  "durabilityinfo.config.hudDisplayMode.PERCENTAGE": "Percentage",
+  "durabilityinfo.config.hudOffsetX": "HUD Offset X",
+  "durabilityinfo.config.hudOffsetY": "HUD Offset Y",
+  "durabilityinfo.config.showDamageDealt": "Show Damage Dealt Instead of Remaining"
+}

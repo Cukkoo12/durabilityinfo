@@ -28,5 +28,8 @@ Thumbs.db
 run/
 logs/
 
-# Mod output (optional, build edince oluşur)
+# Forge mavenizer cache (large binary repo)
+**/.gradle/mavenizer/
+
+# Mod output
 build/libs/*.jar
