@@ -27,6 +27,11 @@ Thumbs.db
 # Minecraft / Loom
 run/
 logs/
+crash-reports/
+local.properties
+.env
+.env.*
+!.env.example
 
 # Forge mavenizer cache (large binary repo)
 **/.gradle/mavenizer/
