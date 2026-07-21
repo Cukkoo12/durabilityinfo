@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 public final class HudRenderer {
     private static final String[] KEYS = {"helmet", "chestplate", "leggings", "boots", "main_hand", "offhand"};
     private static final int[] ORDER = new int[6];
+    private static final int[] VISIBLE = new int[6];
 
     private HudRenderer() {}
 
@@ -32,7 +33,7 @@ public final class HudRenderer {
             int i = ORDER[orderIndex];
             HudSlotView view = ClientRuntime.view(i);
             if (enabled(i, config.hud) && HudVisibilityDecider.shouldShow(
-                    view.snapshot(), config.hud, now, ClientRuntime.changedAt(KEYS[i]))) visible++;
+                    view.snapshot(), config.hud, now, ClientRuntime.changedAt(KEYS[i]))) VISIBLE[visible++] = i;
         }
         if (visible == 0) return;
 
@@ -52,13 +53,10 @@ public final class HudRenderer {
             graphics.fill(panel.x(), panel.y(), panel.right(), panel.bottom(), alpha | 0x00101010);
         }
 
-        int rendered = 0;
-        for (int orderIndex = 0; orderIndex < ORDER.length; orderIndex++) {
-            int i = ORDER[orderIndex];
+        for (int rendered = 0; rendered < visible; rendered++) {
+            int i = VISIBLE[rendered];
             HudSlotView view = ClientRuntime.view(i);
-            if (!enabled(i, config.hud) || !HudVisibilityDecider.shouldShow(view.snapshot(), config.hud, now, ClientRuntime.changedAt(KEYS[i]))) continue;
             renderSlot(graphics, client.font, view, geometry.row(rendered), config, now);
-            rendered++;
         }
         graphics.pose().popMatrix();
     }

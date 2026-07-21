@@ -11,7 +11,7 @@ public final class TooltipFormatter {
         if (style == TooltipStyle.OFF || !DurabilityCalculator.isUsable(snapshot)) return List.of();
         if (snapshot.unbreakable()) {
             return config.tooltip.showUnbreakable
-                    ? List.of(TooltipLine.translatable("Unbreakable", "durabilityinfo.tooltip.unbreakable", DurabilityColorScale.Band.HEALTHY))
+                    ? List.of(TooltipLine.translatable("durabilityinfo.tooltip.unbreakable", DurabilityColorScale.Band.HEALTHY))
                     : List.of();
         }
         int remaining = DurabilityCalculator.remaining(snapshot);
@@ -23,17 +23,17 @@ public final class TooltipFormatter {
         String percent = percentage + "%";
         String bar = bar(percentage, config.tooltip.barWidth);
         return switch (style) {
-            case COMPACT -> List.of(TooltipLine.translatable(numbers + " • " + percent,
+            case COMPACT -> List.of(TooltipLine.translatable(
                     "durabilityinfo.tooltip.compact", band, value, snapshot.maxDurability(), percentage));
             case VANILLA_PLUS -> config.tooltip.showBar
-                    ? List.of(TooltipLine.translatable("Durability: " + numbers + " (" + percent + ")",
-                    "durabilityinfo.tooltip.vanilla_plus", band, value, snapshot.maxDurability(), percentage), TooltipLine.literal(bar, band))
-                    : List.of(TooltipLine.translatable("Durability: " + numbers + " (" + percent + ")",
-                    "durabilityinfo.tooltip.vanilla_plus", band, value, snapshot.maxDurability(), percentage));
-            case DETAILED -> List.of(TooltipLine.translatable("Durability: " + numbers,
-                            "durabilityinfo.tooltip.detailed_remaining", band, value, snapshot.maxDurability()),
-                    TooltipLine.translatable("Remaining: " + percent,
-                            "durabilityinfo.tooltip.detailed_percentage", band, percentage), TooltipLine.literal(bar, band));
+                    ? List.of(TooltipLine.translatable("durabilityinfo.tooltip.vanilla_plus", band,
+                            value, snapshot.maxDurability(), percentage), TooltipLine.literal(bar, band))
+                    : List.of(TooltipLine.translatable("durabilityinfo.tooltip.vanilla_plus", band,
+                            value, snapshot.maxDurability(), percentage));
+            case DETAILED -> List.of(TooltipLine.translatable("durabilityinfo.tooltip.detailed_remaining", band,
+                            value, snapshot.maxDurability()),
+                    TooltipLine.translatable("durabilityinfo.tooltip.detailed_percentage", band, percentage),
+                    TooltipLine.literal(bar, band));
             case BAR_ONLY -> List.of(TooltipLine.literal(bar, band));
             case CUSTOM -> custom(config, numbers, percent, bar, band);
             case OFF -> List.of();
@@ -43,9 +43,9 @@ public final class TooltipFormatter {
     private static List<TooltipLine> custom(DurabilityInfoConfig config, String numbers, String percent,
                                             String bar, DurabilityColorScale.Band band) {
         List<TooltipLine> lines = new ArrayList<>(3);
-        if (config.tooltip.showNumbers) lines.add(TooltipLine.translatable("Durability: " + numbers,
+        if (config.tooltip.showNumbers) lines.add(TooltipLine.translatable(
                 "durabilityinfo.tooltip.durability", band, numbers.split(" / ")[0], numbers.split(" / ")[1]));
-        if (config.tooltip.showPercentage) lines.add(TooltipLine.translatable("Durability: " + percent,
+        if (config.tooltip.showPercentage) lines.add(TooltipLine.translatable(
                 "durabilityinfo.tooltip.percentage", band, percent.substring(0, percent.length() - 1)));
         if (config.tooltip.showBar) lines.add(TooltipLine.literal(bar, band));
         return List.copyOf(lines);
@@ -61,8 +61,8 @@ public final class TooltipFormatter {
         static TooltipLine literal(String text, DurabilityColorScale.Band band) {
             return new TooltipLine(text, null, new Object[0], band);
         }
-        static TooltipLine translatable(String text, String key, DurabilityColorScale.Band band, Object... arguments) {
-            return new TooltipLine(text, key, arguments, band);
+        static TooltipLine translatable(String key, DurabilityColorScale.Band band, Object... arguments) {
+            return new TooltipLine("", key, arguments, band);
         }
     }
 }

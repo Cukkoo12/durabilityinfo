@@ -18,7 +18,9 @@ class FeatureModelTest {
         config.tooltip.style = TooltipStyle.OFF;
         assertSame(java.util.List.of().getClass(), TooltipFormatter.format(snapshot("main", "pick", 1), config).getClass());
         config.tooltip.style = TooltipStyle.COMPACT;
-        assertEquals("47 / 100 • 47%", TooltipFormatter.format(snapshot("main", "pick", 53), config).getFirst().text());
+        TooltipFormatter.TooltipLine compact = TooltipFormatter.format(snapshot("main", "pick", 53), config).getFirst();
+        assertEquals("durabilityinfo.tooltip.compact", compact.translationKey());
+        assertArrayEquals(new Object[]{47, 100, 47}, compact.arguments());
     }
 
     @Test void visibilityModesAreDeterministic() {

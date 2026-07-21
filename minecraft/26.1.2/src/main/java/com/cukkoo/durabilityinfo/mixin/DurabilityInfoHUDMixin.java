@@ -18,9 +18,7 @@ public class DurabilityInfoHUDMixin {
     private void durabilityinfo$render(GuiGraphicsExtractor graphics, DeltaTracker tracker, CallbackInfo ci) {
         var config = DurabilityInfoConfigManager.current();
         boolean hidden = config.hud.hideWhenGameHudHidden && Minecraft.getInstance().options.hideGui;
-        if (!hidden) {
-            HudRenderer.render(graphics);
-            ClientRuntime.renderNotifications(graphics);
-        }
+        if (!hidden) HudRenderer.render(graphics);
+        ClientRuntime.renderNotifications(graphics);
     }
 }

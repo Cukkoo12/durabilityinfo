@@ -22,7 +22,6 @@ Thumbs.db
 # Java
 *.class
 *.jar
-!gradle/wrapper/gradle-wrapper.jar
 
 # Minecraft / Loom
 run/
@@ -36,6 +35,3 @@ local.properties
 
 # Forge mavenizer cache (large binary repo)
 **/.gradle/mavenizer/
-
-# Mod output
-build/libs/*.jar

@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.cukkoo.durabilityinfo'
-version = '2.0.0-dev.1'
+version = '2.0.0'
 
 repositories { mavenCentral() }
 

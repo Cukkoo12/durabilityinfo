@@ -1,6 +1,6 @@
-# DurabilityInfo 2.0 Development
+# DurabilityInfo 2.0
 
-DurabilityInfo is a fully client-side Minecraft mod for understanding equipment durability without changing item behavior. This repository currently builds **2.0.0-dev.1**, an active development snapshot—not the final 2.0.0 release.
+DurabilityInfo is a fully client-side Minecraft mod for understanding equipment durability without changing item behavior. The current release is **2.0.0**.
 
 ![HUD and Tooltip Preview](screenshots/ingame.png)
 
@@ -56,7 +56,7 @@ The schema version is 2. Configuration loads once during client initialization a
 
 Existing 1.x fields are migrated to their closest 2.0 equivalents. New installations use the Vanilla+ tooltip style, an always-visible HUD at 85% scale, a 10% primary warning, and disabled overlays, chat warnings, and damage/repair popups. Empty slots and non-damageable items never create HUD rows.
 
-## Supported development builds
+## Supported builds
 
 | Loader | Minecraft |
 |---|---|
@@ -67,13 +67,13 @@ Existing 1.x fields are migrated to their closest 2.0 equivalents. New installat
 | NeoForge | 26.1.2 |
 | NeoForge | 26.2 |
 
-All six builds use Java 25, mod ID `durabilityinfo`, version `2.0.0-dev.1`, identical schema/defaults/presets/translations, and narrow 26.1.2/26.2 rendering adapters.
+All six builds use Java 25, mod ID `durabilityinfo`, version `2.0.0`, identical schema/defaults/presets/translations, and narrow 26.1.2/26.2 rendering adapters.
 
 ## Client-side safety
 
 DurabilityInfo does not modify ItemStack durability, cancel damage, alter inventories, send packets, require server installation, change gameplay rules, modify attributes, or force chunk loading. Forge and NeoForge isolate client GUI/event registration from their main mod class.
 
-## Development verification
+## Verification
 
 The shared tests cover migration, validation, corrupt backup, atomic save, no access-time IO, presets, durability math, tooltip styles, layouts, visibility, alerts, notification bounds/merging, overlays, and lifecycle resets. `tools/verify-2.0.ps1` checks dependency cleanup, safety, source parity, mixin parity, translations, metadata, and forbidden operations.
 

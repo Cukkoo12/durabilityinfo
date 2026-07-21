@@ -14,7 +14,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public final class ClientRuntime {
     private static final AlertStateTracker ALERTS = new AlertStateTracker();
@@ -29,6 +30,13 @@ public final class ClientRuntime {
     private static final long[] CHANGED_AT = new long[6];
     private static final int[] LAST_DAMAGE = {-1, -1, -1, -1, -1, -1};
     private static final String[] LAST_ITEM = {"", "", "", "", "", ""};
+    private static final int MAX_ICON_CACHE = 16;
+    private static final Map<String, ItemStack> NOTIFICATION_ICONS = new LinkedHashMap<>(MAX_ICON_CACHE + 1, 0.75F, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, ItemStack> eldest) {
+            return size() > MAX_ICON_CACHE;
+        }
+    };
     private static Object lastPlayer;
     private static Object lastLevel;
     private static Component activeActionBar;
@@ -69,12 +77,17 @@ public final class ClientRuntime {
             }
             boolean notify = config.notifications.enabled && (armor ? config.notifications.armor
                     : i == 4 ? config.notifications.mainHand : config.notifications.offhand);
-            if (notify) CHANGES.update(snapshot, now);
+            if (notify) {
+                rememberIcon(snapshot, STACKS[i]);
+                CHANGES.update(snapshot, now);
+            }
         }
         if (config.notifications.enabled && config.notifications.entireHotbar) {
             for (int i = 0; i < 9; i++) {
-                CHANGES.update(MinecraftDurabilityAdapter.snapshot("hotbar_" + i,
-                        client.player.getInventory().getItem(i)), now);
+                ItemStack stack = client.player.getInventory().getItem(i);
+                DurabilitySnapshot snapshot = MinecraftDurabilityAdapter.snapshot("hotbar_" + i, stack);
+                rememberIcon(snapshot, stack);
+                CHANGES.update(snapshot, now);
             }
         }
         if (config.alerts.actionBar && activeActionBar != null && now <= activeActionBarUntil) {
@@ -114,12 +127,10 @@ public final class ClientRuntime {
             graphics.fill(0, rowY, width, rowY + 22, 0xA0000000);
             ItemStack icon = findCurrentStack(notification.itemKey());
             if (!icon.isEmpty()) graphics.item(icon, 3, rowY + 3);
-            String delta = notification.delta() < 0
-                    ? notification.delta() + " Durability"
-                    : "+" + notification.delta() + " Repaired";
-            if (notification.count() > 1) delta += " ×" + notification.count();
-            graphics.text(client.font, notification.displayName(), 22, rowY + 2, 0xFFFFFFFF, config.hud.textShadow);
-            graphics.text(client.font, delta + " • " + notification.remaining() + "/" + notification.maximum(),
+            Component detail = notificationText(notification);
+            graphics.text(client.font, Component.literal(notification.displayName()), 22, rowY + 2,
+                    0xFFFFFFFF, config.hud.textShadow);
+            graphics.text(client.font, detail,
                     22, rowY + 12, notification.delta() < 0 ? 0xFFFF7777 : 0xFF77FF77, config.hud.textShadow);
             row++;
         }
@@ -149,6 +160,7 @@ public final class ClientRuntime {
         java.util.Arrays.fill(LAST_ITEM, "");
         activeActionBar = null;
         activeActionBarUntil = 0L;
+        NOTIFICATION_ICONS.clear();
     }
 
     private static void emitAlert(Minecraft client, AlertStateTracker.AlertEvent event, int slot, long now,
@@ -156,13 +168,15 @@ public final class ClientRuntime {
         if (config.alerts.hudFlash) FLASH_UNTIL[slot] = now + (long) (config.alerts.flashSeconds * 1000.0);
         if (config.alerts.sound) client.player.playSound(SoundEvents.ITEM_BREAK.value(),
                 (float) config.alerts.soundVolume, 1.0F);
-        String text = event.snapshot().displayName() + ": " + DurabilityCalculator.remaining(event.snapshot())
-                + " durability (" + event.level().key().replace('_', ' ') + ")";
+        Component text = Component.translatable("durabilityinfo.alert.message",
+                Component.literal(event.snapshot().displayName()),
+                DurabilityCalculator.remaining(event.snapshot()),
+                Component.translatable("durabilityinfo.alert.level." + event.level().key()));
         if (config.alerts.actionBar) {
-            activeActionBar = Component.literal(text);
+            activeActionBar = text;
             activeActionBarUntil = now + (long) (config.alerts.messageSeconds * 1000.0);
         }
-        if (config.alerts.chat) client.player.sendSystemMessage(Component.literal(text));
+        if (config.alerts.chat) client.player.sendSystemMessage(text);
     }
 
     private static void collect(Minecraft client) {
@@ -176,7 +190,28 @@ public final class ClientRuntime {
 
     private static ItemStack findCurrentStack(String itemKey) {
         for (ItemStack stack : STACKS) if (!stack.isEmpty() && stack.getItem().toString().equals(itemKey)) return stack;
-        return ItemStack.EMPTY;
+        return NOTIFICATION_ICONS.getOrDefault(itemKey, ItemStack.EMPTY);
+    }
+
+    private static void rememberIcon(DurabilitySnapshot snapshot, ItemStack stack) {
+        if (DurabilityCalculator.isUsable(snapshot) && stack != null && !stack.isEmpty()) {
+            NOTIFICATION_ICONS.put(snapshot.itemKey(), stack.copy());
+        }
+    }
+
+    private static Component notificationText(DurabilityChangeTracker.ChangeNotification notification) {
+        if (notification.delta() < 0) {
+            return notification.count() > 1
+                    ? Component.translatable("durabilityinfo.notification.damage_repeated", -notification.delta(),
+                            notification.count(), notification.remaining(), notification.maximum())
+                    : Component.translatable("durabilityinfo.notification.damage", -notification.delta(),
+                            notification.remaining(), notification.maximum());
+        }
+        return notification.count() > 1
+                ? Component.translatable("durabilityinfo.notification.repair_repeated", notification.delta(),
+                        notification.count(), notification.remaining(), notification.maximum())
+                : Component.translatable("durabilityinfo.notification.repair", notification.delta(),
+                        notification.remaining(), notification.maximum());
     }
 
     private static int slotIndex(String slotKey) {

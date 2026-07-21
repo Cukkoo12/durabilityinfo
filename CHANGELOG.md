@@ -1,8 +1,6 @@
 # Changelog
 
-## Unreleased — 2.0.0
-
-Development snapshot: `2.0.0-dev.1`. This section describes work in progress and is not a final release announcement.
+## 2.0.0 — 2026-07-21
 
 ### Added
 
@@ -24,7 +22,7 @@ Development snapshot: `2.0.0-dev.1`. This section describes work in progress and
 - HUD formatted values are cached and rebuilt only after item, durability, or configuration changes.
 - Fabric uses only the required Fabric Item API module and exact optional Mod Menu versions.
 - Forge/NeoForge client registration is isolated from dedicated-server class loading.
-- All six artifacts use unique loader/Minecraft names and version `2.0.0-dev.1`.
+- All six artifacts use unique loader/Minecraft names and version `2.0.0`.
 - Settings now use a responsive centered panel, human-readable values, collapsible alert channels, keyboard-accessible scrolling, and a focusable/narratable HUD preview.
 - Vanilla+ defaults now retain the Vanilla+ tooltip style, show the HUD immediately at 85% scale, and keep an exact 10% primary warning after validation.
 
@@ -33,6 +31,9 @@ Development snapshot: `2.0.0-dev.1`. This section describes work in progress and
 - Cloth Config repositories, dependencies, suggestions, imports, screen factory, and documentation.
 - Render-loop alert detection, global warning cooldown, render-triggered sounds, and load-on-demand configuration.
 
-### Known development limitations
+### Fixed
 
-- In-game visual, narration, GUI-scale, and third-party compatibility testing remains required before final 2.0.0.
+- Localized damage, repair, action-bar, chat, and alert-level messages.
+- Retained correct notification icons for changes tracked across the entire hotbar using a bounded copy cache.
+- Kept damage and repair popups independent from the equipment HUD visibility option.
+- Reduced HUD visibility filtering to one allocation-free pass per frame.

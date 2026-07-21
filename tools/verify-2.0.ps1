@@ -11,7 +11,7 @@ $projects = @(
 
 foreach ($project in $projects) {
     $properties = Get-Content -Raw -LiteralPath "$($project.Path)/gradle.properties"
-    if ($properties -notmatch '(?m)^mod_version=2\.0\.0-dev\.1$') { throw "Wrong development version: $($project.Path)" }
+    if ($properties -notmatch '(?m)^mod_version=2\.0\.0$') { throw "Wrong release version: $($project.Path)" }
     $build = Get-Content -Raw -LiteralPath "$($project.Path)/build.gradle"
     foreach ($source in @('../../shared/src/main/java', '../../minecraft/common/src/main/java', '../../minecraft/${project.minecraft_version}/src/main/java')) {
         if (-not $build.Contains($source)) { throw "Missing canonical source path $source in $($project.Path)" }
@@ -85,6 +85,15 @@ $requiredUiKeys = @(
     'durabilityinfo.config.preset.summary.alerts',
     'durabilityinfo.config.preset.summary.overlays',
     'durabilityinfo.config.preset.summary.notifications'
+    'durabilityinfo.notification.damage'
+    'durabilityinfo.notification.damage_repeated'
+    'durabilityinfo.notification.repair'
+    'durabilityinfo.notification.repair_repeated'
+    'durabilityinfo.alert.message'
+    'durabilityinfo.alert.level.warning'
+    'durabilityinfo.alert.level.low'
+    'durabilityinfo.alert.level.critical'
+    'durabilityinfo.alert.level.last_chance'
 )
 foreach ($key in $requiredUiKeys) {
     if (-not ($language.PSObject.Properties.Name -contains $key)) { throw "Missing required UI translation: $key" }
@@ -110,6 +119,8 @@ foreach ($label in $rowLabels) {
 }
 $rawEnumLabels = rg -n 'Component\.literal\([^\r\n]*\.name\(\)' minecraft/common/src/main/java/com/cukkoo/durabilityinfo/screen -g '*.java'
 if ($LASTEXITCODE -eq 0) { throw "Raw enum label found in settings UI: $rawEnumLabels" }
+$runtimeEnglish = rg -n 'Component\.literal\([^\r\n]*(Durability|Repaired)|replace\(''_''[^\r\n]*alert' minecraft/common/src/main/java/com/cukkoo/durabilityinfo/client -g '*.java'
+if ($LASTEXITCODE -eq 0) { throw "Hard-coded runtime English remains: $runtimeEnglish" }
 $hudRenderer = Get-Content -Raw -LiteralPath 'minecraft/common/src/main/java/com/cukkoo/durabilityinfo/client/HudRenderer.java'
 $hudEditor = Get-Content -Raw -LiteralPath 'minecraft/common/src/main/java/com/cukkoo/durabilityinfo/screen/BaseHudLayoutEditorScreen.java'
 foreach ($sharedGeometryCall in @('HudGeometry.calculate', 'HudGeometry.value')) {
