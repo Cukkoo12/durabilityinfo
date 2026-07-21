@@ -3,7 +3,7 @@
   "id": "durabilityinfo",
   "version": "${version}",
   "name": "DurabilityInfo",
-  "description": "Shows item durability numbers, percentage, and a colored bar in item tooltips.",
+  "description": "Client-side durability tooltips, customizable HUD, alerts, notifications, and slot overlays.",
   "authors": ["Cukkoo"],
   "contact": {
     "sources": "https://github.com/Cukkoo12/durabilityinfo"
@@ -18,11 +18,10 @@
   "mixins": ["durabilityinfo.mixins.json"],
   "depends": {
     "fabricloader": ">=0.19.3",
-    "fabric-api": ">=0.153.0",
-    "minecraft": ">=26.2"
+    "fabric-item-api-v1": "*",
+    "minecraft": ">=26.2 <26.3"
   },
   "suggests": {
-    "modmenu": "*",
-    "cloth-config2": "*"
+    "modmenu": "20.0.1"
   }
 }

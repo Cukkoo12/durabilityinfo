@@ -2,7 +2,7 @@
   "required": true,
   "package": "com.cukkoo.durabilityinfo.mixin",
   "compatibilityLevel": "JAVA_25",
-  "client": ["DurabilityInfoHUDMixin"],
+  "client": ["DurabilityInfoHUDMixin", "MinecraftClientMixin", "HotbarOverlayMixin", "ContainerOverlayMixin", "ItemStackVanillaBarMixin"],
   "injectors": {
     "defaultRequire": 1
   }

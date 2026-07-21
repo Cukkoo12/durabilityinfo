@@ -27,6 +27,7 @@ Thumbs.db
 # Minecraft / Loom
 run/
 logs/
+*.log
 crash-reports/
 local.properties
 .env

@@ -1,61 +1,84 @@
-# DurabilityInfo
+# DurabilityInfo 2.0 Development
 
-**Track your item durability everywhere — tooltip, HUD, and configurable warnings.**
+DurabilityInfo is a fully client-side Minecraft mod for understanding equipment durability without changing item behavior. This repository currently builds **2.0.0-dev.1**, an active development snapshot—not the final 2.0.0 release.
 
 ![HUD and Tooltip Preview](screenshots/ingame.png)
 
-## Features
+## 2.0 feature overview
 
-### 🛡️ Item Tooltip
-Shows durability info directly on every damageable item's tooltip:
-- **Numbers** — `Durability: 235 / 500`
-- **Percentage** — `Durability: 47%`
-- **Color-coded bar** — green → yellow → red as durability drops
+### Tooltip styles
 
-### 🖥️ HUD Overlay
-Always-visible durability display on screen:
-- Shows **item icons** with a colored durability bar (or percentage) under each
-- Displays: helmet, chestplate, leggings, boots, main hand, offhand
-- Semi-transparent background for readability
-- Configurable position (top-left/right, bottom-left/right) + X/Y offset
+Damageable items use one shared, integer-safe durability calculation and consistent colors everywhere. Available styles are Off, Compact, Vanilla+, Detailed, Bar Only, and Custom. Custom mode keeps individual numbers, percentage, and text-bar toggles for migrated 1.x users. Options include remaining or damage-taken values, Unbreakable output, bar width, and hiding fully repaired items.
 
-### ⚠️ Low Durability Warning
-- Configurable threshold (`warningThreshold`, default: 10%)
-- Below threshold: **red flashing bar** + **ITEM_BREAK sound** (2s cooldown)
-- Helps prevent tools and armor from breaking unexpectedly
+### Customizable HUD
 
-![Configuration Screen](screenshots/config.png)
+Helmet, chestplate, leggings, boots, main hand, and offhand groups can be enabled independently. The HUD supports mini bar, percentage, remaining, remaining/max, and combined displays; vertical, horizontal, and compact-grid layouts; scale, spacing, background, icons, text shadow, alignment, equipment ordering, anchors, and offsets.
+
+The native HUD editor provides a simulated six-slot preview, mouse dragging, vertical/horizontal layout selection, scale and background controls, optional edge/center snapping, safe-screen boundaries, keyboard arrow nudging, resize clamping, position reset, and Apply/Cancel/Done behavior. Cancel and Escape restore changes made since the last Apply.
+
+### Smart visibility
+
+Visibility modes are Always, Damaged Only, Below Threshold, Recently Changed, and Smart. Smart mode briefly shows changed damaged items, keeps critical equipment visible, and hides healthy unchanged items. Creative, Spectator, debug-screen, container-screen, hidden-game-HUD, held-only, and armor-only filters are configurable.
+
+### Multi-level alerts
+
+Armor and held items have independent Warning, Low, Critical, and Last Chance thresholds. Each threshold can be disabled. Sound, action bar, chat, and HUD flash channels are independently configurable.
+
+Alerts run from a client tick tracker, not rendering. They trigger only on downward crossings, reset after repair or replacement, track slots independently, continue when DurabilityInfo's HUD is disabled, and never swap items or prevent breakage.
+
+### Damage and repair notifications
+
+Optional bounded notifications distinguish damage from repair, merge rapid repeated changes, retain at most three visible entries, and can track equipped armor, both hands, and optionally the whole hotbar. They clear across player/world replacement, disconnect, dimension transition, and shutdown.
+
+### Hotbar and inventory overlays
+
+Hotbar, player-inventory, and safely identified player-owned container slots support Off, Percentage, Remaining, Mini Bar, and Colored Border modes. Full-durability hiding, threshold filtering, text shadow, scale, and border thickness are configurable. Vanilla durability bars remain enabled unless the user explicitly selects replacement.
+
+### Presets
+
+Minimal, Vanilla+, Mining, Combat, and Detailed presets provide coherent starting points. Preset selection shows a confirmation preview and only saves through Apply or Done. Editing an individual controlled value switches the draft to Custom without discarding it.
+
+## Native settings access
+
+The settings screen opens on a deliberately small essentials page with Tooltip Style, Show HUD, Warning Level, Edit HUD Position, and Advanced Settings. Expert options remain available in six focused Advanced categories: Tooltip, HUD, Warnings, Indicators, Popups, and Presets. Native cycle controls, sliders, toggles, responsive scrolling, keyboard focus, narration, and Apply/Cancel/Done semantics are preserved.
+
+- **Fabric:** Mod Menu is optional. Its Configure button opens DurabilityInfo's native screen when installed. Without Mod Menu, edit the JSON manually.
+- **Forge:** Open DurabilityInfo from the Mods screen and choose Config.
+- **NeoForge:** Open DurabilityInfo from the Mods screen and choose Config.
+
+There is no settings key binding and no mandatory GUI/configuration library. Cloth Config support and dependencies were removed for 2.0.
 
 ## Configuration
 
-File: `.minecraft/config/durabilityinfo.json`
+Path: `.minecraft/config/durabilityinfo.json`
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `showDurabilityNumbers` | `true` | Show current / max durability in tooltip |
-| `showPercentage` | `true` | Show durability percentage in tooltip |
-| `showBar` | `true` | Show color-coded durability bar in tooltip |
-| `showOnUnbreakable` | `false` | Show info on unbreakable items |
-| `warningThreshold` | `10` | Low durability warning threshold (%) |
-| `hudAnchor` | `BOTTOM_RIGHT` | HUD position (`TOP_LEFT`, `TOP_RIGHT`, `BOTTOM_LEFT`, `BOTTOM_RIGHT`) |
-| `hudOffsetX` | `4` | HUD horizontal offset (px) |
-| `hudOffsetY` | `4` | HUD vertical offset (px) |
-| `hudDisplayMode` | `BAR` | HUD display: `BAR` (icon + bar) or `PERCENTAGE` (icon + % text) |
-| `showDamageDealt` | `false` | Show damage taken instead of remaining durability |
+The schema version is 2. Configuration loads once during client initialization and remains in memory during tooltip, HUD, alert, notification, hotbar, and inventory work. Saves are pretty-printed and atomic. Missing fields use defaults, unknown fields are ignored, numeric values are validated, and malformed files are preserved with a timestamped `.corrupt` suffix before safe defaults are restored.
 
-If [Cloth Config](https://modrinth.com/mod/cloth-config) and [Mod Menu](https://modrinth.com/mod/modmenu) are installed, you can configure everything in-game from the Mods screen.
+Existing 1.x fields are migrated to their closest 2.0 equivalents. New installations use the Vanilla+ tooltip style, an always-visible HUD at 85% scale, a 10% primary warning, and disabled overlays, chat warnings, and damage/repair popups. Empty slots and non-damageable items never create HUD rows.
 
-## Requirements
+## Supported development builds
 
-- Minecraft 26.1.x
-- [Fabric Loader](https://fabricmc.net/) ≥ 0.18.5
-- [Fabric API](https://modrinth.com/mod/fabric-api)
+| Loader | Minecraft |
+|---|---|
+| Fabric | 26.1.2 |
+| Fabric | 26.2 |
+| Forge | 26.1.2 |
+| Forge | 26.2 |
+| NeoForge | 26.1.2 |
+| NeoForge | 26.2 |
 
-## Optional
+All six builds use Java 25, mod ID `durabilityinfo`, version `2.0.0-dev.1`, identical schema/defaults/presets/translations, and narrow 26.1.2/26.2 rendering adapters.
 
-- [Cloth Config](https://modrinth.com/mod/cloth-config) — in-game config screen
-- [Mod Menu](https://modrinth.com/mod/modmenu) — access config from the Mods list
+## Client-side safety
+
+DurabilityInfo does not modify ItemStack durability, cancel damage, alter inventories, send packets, require server installation, change gameplay rules, modify attributes, or force chunk loading. Forge and NeoForge isolate client GUI/event registration from their main mod class.
+
+## Development verification
+
+The shared tests cover migration, validation, corrupt backup, atomic save, no access-time IO, presets, durability math, tooltip styles, layouts, visibility, alerts, notification bounds/merging, overlays, and lifecycle resets. `tools/verify-2.0.ps1` checks dependency cleanup, safety, source parity, mixin parity, translations, metadata, and forbidden operations.
+
+Manual in-game verification is still required before a final 2.0.0 release for visual placement, GUI scaling, narration quality, compatibility with other HUD/container mods, and every notification channel.
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT — see [LICENSE](LICENSE).

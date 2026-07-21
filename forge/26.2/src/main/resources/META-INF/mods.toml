@@ -10,7 +10,8 @@ displayName="DurabilityInfo"
 logoFile="assets/durabilityinfo/icon.png"
 credits="Cukkoo"
 authors="Cukkoo"
-description='Shows item durability numbers, percentage, and a colored bar in item tooltips.'
+displayTest="IGNORE_SERVER_VERSION"
+description='Client-side durability tooltips, customizable HUD, alerts, notifications, and slot overlays.'
 displayURL="https://github.com/Cukkoo12/durabilityinfo"
 
 [[dependencies.durabilityinfo]]

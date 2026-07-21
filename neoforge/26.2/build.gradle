@@ -8,6 +8,11 @@ group = project.maven_group
 
 base { archivesName = project.archives_base_name }
 
+sourceSets.main.java.srcDir file("../../shared/src/main/java")
+sourceSets.main.java.srcDir file("../../minecraft/common/src/main/java")
+sourceSets.main.java.srcDir file("../../minecraft/${project.minecraft_version}/src/main/java")
+sourceSets.main.resources.srcDir file("../../minecraft/common/src/main/resources")
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
@@ -36,7 +41,8 @@ processResources {
 }
 
 jar {
-    from("LICENSE") {
+    archiveFileName = "durabilityinfo-${project.mod_version}-neoforge-${project.minecraft_version}.jar"
+    from("../../LICENSE") {
         rename { "${it}_${project.archives_base_name}" }
     }
 }
